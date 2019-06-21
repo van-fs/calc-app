@@ -1,0 +1,26 @@
+<div fxLayout="row" fxLayoutAlign="center none">
+  <div fxFlex="20"></div>
+  <div fxFill fxLayout="column" fxLayoutAlign="start stretch">
+    <div>
+      <mat-card class="mat-display-4 display">{{ display }}</mat-card>
+    </div>
+    <div fxFill>
+      <mat-grid-list cols="4" rowHeight="100px">
+        <mat-grid-tile>
+          <div fxLayout="row" fxFill>
+            <button mat-flat-button (click)="press('AC')"><h1>AC</h1></button>
+            <button mat-flat-button (click)="press('CE')"><h1>CE</h1></button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile *ngFor="let button of buttons" [colspan]=button.span>
+          <button mat-flat-button [color]="button.color" [disabled]="button.text === undefined"
+            (click)="press(button.text)">
+            <h1>{{ button.text }}</h1>
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+
+  </div>
+  <div fxFlex="20"></div>
+</div>
