@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { __core_private_testing_placeholder__ } from '@angular/core/testing';
 
 enum Color {
   ACCENT = 'accent',

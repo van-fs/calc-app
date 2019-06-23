@@ -1,0 +1,28 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <div fxLayout="column">
+    <mat-form-field>
+      <input #gitIssue matInput placeholder="GitHub Issue">
+    </mat-form-field>
+    <mat-form-field>
+      <input #sessionId matInput placeholder="Session ID">
+    </mat-form-field>
+    <mat-form-field>
+      <input #timestamp matInput placeholder="Start Time">
+    </mat-form-field>
+    <mat-form-field>
+      <textarea #events matInput placeholder="FullStory Events" rows="4"></textarea>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <button mat-flat-button color="primary" (click)="load(events.value, sessionId.value, timestamp.value)" alt="Filter events"><mat-icon>filter_list</mat-icon></button>
+    <button mat-flat-button color="primary" (click)="playAll()" alt="Play all events"><mat-icon>play_circle_outline</mat-icon></button>
+    <button mat-flat-button color="primary" (click)="step()" alt="Play next event"><mat-icon>redo</mat-icon></button>
+  </div>
+  <hr width="100%">
+  <div fxLayout="row" fxLayoutAlign="center center">
+    {{ filteredEvents.length }} Events
+  </div>
+  <div xLayout="column" fxLayoutAlign="start stretch" *ngFor="let event of filteredEvents">
+    <button mat-flat-button *ngIf="event.EventType === 'click'">{{ event.EventType}} {{event.EventTargetText.substring(0, 10)}}</button>
+  </div>
+</div>
