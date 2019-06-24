@@ -21,23 +21,27 @@ export class AppErrorHandler implements ErrorHandler {
       // send error to the browser console
       console.error(error);
 
+      if (environment.production) {
+        // send the error to issue server
+        const sessionUrl = FS.getCurrentSessionURL(true);
 
-      // send the error to issue server
-      const sessionUrl = FS.getCurrentSessionURL(true);
+        try {
+          const response: any = await this.http.post(`${environment.url}/issues`, {
+            replayUrl: document.location.href.substring(0, document.location.href.length - 1),
+            content: error.message,
+            sessionUrl
+          }).toPromise();
 
-      try {
-        const response: any = await this.http.post(`${environment.url}/issue`, {
-          content: error.message,
-          sessionUrl
-        }).toPromise();
+          const { html_url: issueUrl } = response;
+          
+          console.log(`Bug reported created at ${issueUrl}`)
 
-        const { html_url: issueUrl } = response;
-        
-        console.log(`Bug reported created at ${issueUrl}`)
-
-        this.logService.error(`Oh snap, something went wrong! Track the bug @ ${issueUrl}.`);
-      } catch (e) {
-        console.error(e);
+          this.logService.error(`Oh snap, something went wrong! Track the bug @ ${issueUrl}.`);
+        } catch (e) {
+          console.error(e);
+        }
+      } {
+        this.logService.error(`Oh snap, something went wrong! Check the console log.`);
       }
     }
   }

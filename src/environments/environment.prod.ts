@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  url: '<add URL to server>',
+  url: 'http://fs-calc.mybluemix.net',
   fsOrg: 'MKDN5',
 };

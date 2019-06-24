@@ -1,5 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../environments/environment';
 
 interface Event {
   SessionId: number;
@@ -19,25 +21,42 @@ export class PlayerComponent {
   @ViewChild('events', { static: false })
   eventsRef: ElementRef;
 
+  issueNum: string;
+
   filteredEvents: Event[] = [];
 
-  load(json: string, sessionId?: string, timestamp?: string) {
-    let events: Event[] = JSON.parse(json);
+  constructor (
+    private http: HttpClient,
+  ) {
 
-    // filter only click events since they apply to the calc usage
-    events = events.filter(event => event.EventType === 'click');
+  }
+
+  async load(issueNumber: string, json?: string, sessionId?: string, timestamp?: string) {
+    let events: Event[] = [];
+
+    // get the events either from the Git issue or supplied from textarea
+    if (issueNumber) {
+      events = await this.http.get(`${environment.url}/issues/${issueNumber}`).toPromise() as Event[];
+    } else {
+      events = JSON.parse(json);
+
+      if (sessionId) {
+        events = events.filter(event => event.SessionId === +sessionId);
+      }
+
+      if (timestamp) {
+        events = events.filter(event => new Date(event.EventStart).getTime() >= +timestamp);
+      }
+
+      console.log(`Filtered to ${events.length} events based on session ${sessionId}`);
+
+      this.eventsRef.nativeElement.value = '';
+    }
 
     console.log(`Found ${events.length} events`);
 
-    if (sessionId) {
-      events = events.filter(event => event.SessionId === +sessionId);
-    }
-
-    if (timestamp) {
-      events = events.filter(event => new Date(event.EventStart).getTime() >= +timestamp);
-    }
-
-    console.log(`Filtered to ${events.length} events based on session ${sessionId}`);
+    // filter only click events since they apply to the calc usage
+    events = events.filter(event => event.EventType === 'click' && event.EventTargetSelectorTok.includes('calc%2Dbutton'));
 
     this.filteredEvents = events.map(event => {
       const { EventType, EventTargetText, EventTargetSelectorTok, EventStart, SessionId } = event;
@@ -49,8 +68,6 @@ export class PlayerComponent {
         SessionId,
       };
     });
-
-    this.eventsRef.nativeElement.value = '';
   }
 
   playAll() {
@@ -59,8 +76,10 @@ export class PlayerComponent {
     }
   }
 
-  step() {
-    const event = this.filteredEvents.shift();
+  step(event?: Event) {
+    if (!event) {
+      event = this.filteredEvents.shift();
+    }
 
     const { EventTargetSelectorTok: selector, EventTargetText: text } = event;
 
