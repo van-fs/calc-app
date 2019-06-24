@@ -40,7 +40,7 @@ export class AppErrorHandler implements ErrorHandler {
         } catch (e) {
           console.error(e);
         }
-      } {
+      } else {
         this.logService.error(`Oh snap, something went wrong! Check the console log.`);
       }
     }
