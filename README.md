@@ -18,6 +18,8 @@ Press a few numeric buttons like `7` or `77` followed by an operand such as `+` 
 
 Now something as futuristic as the "calculator" isn't without bugs. We want you to find them. Which button combinations are invalid? Which combinations should work but don't? You decide, and we'll fix it.
 
+![](/screenshots/bug.png)
+
 ## Fix it
 
 Inside the calculator is a complex set of instructions. To make fixing bugs easier, we're using [FullStory](http://fullstory.com) to:
