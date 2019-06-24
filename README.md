@@ -40,6 +40,13 @@ Since FullStory tracks application events, we can use these events to reproduce 
 3. The CSS selector is also processed to remove certain classes. For example, FullStory records when the button is pressed, which has different styling than when the button is not. To support the debugger, these styles are removed.
 4. The timestamp in the GitHub issue is used to locate a FullStory bundle using the REST API.
 
+## Run it yourself
+
+Run the app in development mode.
+
+1. Run `npm install`.
+2. Run `ng serve`.
+
 ## Learn more
 
 Check out [FullStory](http://fullstory.com) for more you can do.
