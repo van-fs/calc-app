@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -21,6 +22,7 @@ import {
   MatInputModule,
   MatMenuModule,
   MatToolbarModule,
+  MatSelectModule,
   MatSidenavModule,
   MatSnackBarModule,
 } from '@angular/material';
@@ -35,6 +37,7 @@ import {
     BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    FormsModule,
     HttpClientModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -44,6 +47,7 @@ import {
     MatInputModule,
     MatMenuModule,
     MatToolbarModule,
+    MatSelectModule,
     MatSidenavModule,
     MatSnackBarModule,
   ],

@@ -1,20 +1,25 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
   <div fxLayout="column">
     <mat-form-field>
-      <input #gitIssue matInput placeholder="GitHub Issue">
+      <mat-label>GitHub Issue</mat-label>
+      <mat-select (selectionChange)="loadIssue($event)">
+        <mat-option *ngFor="let issue of issues" [value]="issue">
+          {{ issue.number }} - {{ issue.title }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field>
-      <input #sessionId matInput placeholder="Session ID">
+      <input [(ngModel)]="sessionId" matInput placeholder="Session ID">
     </mat-form-field>
     <mat-form-field>
-      <input #timestamp matInput placeholder="Start Time">
+      <input [(ngModel)]="timestamp" matInput placeholder="Time of Error">
     </mat-form-field>
     <mat-form-field>
-      <textarea #events matInput placeholder="FullStory Events" rows="4"></textarea>
+      <textarea [(ngModel)]="eventsText" matInput placeholder="FullStory Events" rows="4"></textarea>
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-evenly center">
-    <button mat-flat-button color="primary" (click)="load(gitIssue.value, events.value, sessionId.value, timestamp.value)" alt="Filter events"><mat-icon>filter_list</mat-icon></button>
+    <button mat-flat-button color="primary" (click)="filter()" alt="Filter events"><mat-icon>filter_list</mat-icon></button>
     <button mat-flat-button [disabled]="filteredEvents.length === 0" color="primary" (click)="playAll()" alt="Play all events"><mat-icon>play_circle_outline</mat-icon></button>
     <button mat-flat-button [disabled]="filteredEvents.length === 0" color="primary" (click)="step()" alt="Play next event"><mat-icon>redo</mat-icon></button>
   </div>
@@ -23,9 +28,9 @@
     {{ filteredEvents.length }} Events
   </div>
   <div *ngIf="filteredEvents.length === 0" fxLayout="row" fxLayoutAlign="center center">
-    <div>Enter a <a href="https://github.com/van-fs/calc-app/issues" target="_blank">GitHub issue number</a> and click filter.</div>
+    <div>Select a <a href="https://github.com/van-fs/calc-app/issues" target="_blank">GitHub issue number</a> and filter.</div>
   </div>
   <div xLayout="column" fxLayoutAlign="start stretch" *ngFor="let event of filteredEvents">
-    <button mat-flat-button (click)="step(event)">{{ event.EventType}} {{event.EventTargetText.substring(0, 10)}}</button>
+    <button mat-flat-button (click)="step(event)">{{ event.EventType}} {{event.EventTargetText}}</button>
   </div>
 </div>

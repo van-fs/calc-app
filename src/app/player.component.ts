@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
@@ -16,14 +16,19 @@ interface Event {
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss']
 })
-export class PlayerComponent {
+export class PlayerComponent implements OnInit {
 
   @ViewChild('events', { static: false })
   eventsRef: ElementRef;
 
+  issues: any[] = [];
   issueNum: string;
 
   filteredEvents: Event[] = [];
+
+  eventsText: string;
+  sessionId: string;
+  timestamp: string;
 
   constructor (
     private http: HttpClient,
@@ -31,34 +36,38 @@ export class PlayerComponent {
 
   }
 
-  async load(issueNumber: string, json?: string, sessionId?: string, timestamp?: string) {
-    let events: Event[] = [];
+  async ngOnInit() {
+    this.issues = await this.http.get(`${environment.url}/issues`).toPromise() as any[];
+  }
 
-    // get the events either from the Git issue or supplied from textarea
-    if (issueNumber) {
-      events = await this.http.get(`${environment.url}/issues/${issueNumber}`).toPromise() as Event[];
-    } else {
-      events = JSON.parse(json);
+  async loadIssue(event: any) {
+    const issue = event.value;
+    const tokens = issue.body.split('|');
+    
+    this.sessionId= tokens[11].trim();
+    this.timestamp = tokens[14].trim();
 
-      if (sessionId) {
-        events = events.filter(event => event.SessionId === +sessionId);
-      }
+    const events = await this.http.get(`${environment.url}/issues/${issue.number}`).toPromise() as Event[];
+    this.filteredEvents = this.pruneEvents(events);
+    this.eventsText = JSON.stringify(this.filteredEvents, null, 2);
+    this.filter();  // also filter since the timestamp is used from the issue
+  }
 
-      if (timestamp) {
-        events = events.filter(event => new Date(event.EventStart).getTime() >= +timestamp);
-      }
-
-      console.log(`Filtered to ${events.length} events based on session ${sessionId}`);
-
-      this.eventsRef.nativeElement.value = '';
+  async filter() {
+    if (this.sessionId) {
+      this.filteredEvents = this.filteredEvents.filter(event => event.SessionId === +this.sessionId);
     }
 
-    console.log(`Found ${events.length} events`);
+    if (this.timestamp) {
+      // FIXME there could be some delta between the timestamps in FS and the users machine
+      this.filteredEvents = this.filteredEvents.filter(event => new Date(event.EventStart).getTime() <= (+this.timestamp + 1000));
+    }
 
-    // filter only click events since they apply to the calc usage
-    events = events.filter(event => event.EventType === 'click' && event.EventTargetSelectorTok.includes('calc%2Dbutton'));
+    console.log(`Filtered to ${this.filteredEvents.length}`);
 
-    this.filteredEvents = events.map(event => {
+    this.filteredEvents = this.pruneEvents(this.filteredEvents);
+
+    this.filteredEvents = this.filteredEvents.map(event => {
       const { EventType, EventTargetText, EventTargetSelectorTok, EventStart, SessionId } = event;
       return {
         EventType,
@@ -68,6 +77,12 @@ export class PlayerComponent {
         SessionId,
       };
     });
+  }
+
+  pruneEvents (events: Event[]) {
+  // filter only click events since they apply to the calc usage
+  return events.filter(event => 
+    event.EventType === 'click' && event.EventTargetSelectorTok.includes('calc%2Dbutton'));
   }
 
   playAll() {

@@ -31,16 +31,15 @@ Since FullStory tracks application events, we can use these events to reproduce 
 ![](/screenshots/debugger.gif)
 
 1. Open the debugger using the menu button and Debugger item.
-2. Enter a GitHub issue number from the [issues](https://github.com/van-fs/calc-app/issues) page. For example, enter `29`. (Alternatively, you can also manually load the events using the textarea if you wanted to export them manually from the User page.)
-3. Click the filter icon to load the events. (Optionally filter based on session ID or start timestamp if you've manually loaded the events.)
-4. Click the play button to recreate the entire state, use the step button to execute each event in sequence, or click the individual event to fire the associated button.
+2. Select a GitHub issue number from the [issues](https://github.com/van-fs/calc-app/issues) page. Choose an older issue to ensure FullStory events have been processed; for example, enter `29`.
+3. Click the play button to recreate the entire state, use the step button to execute each event in sequence, or click the individual event to fire the associated button.
 
 ## Fun facts
 
 1. A `fullstory.component.ts` is used to dynamically inject FullStory into the DOM. While adding a script include in `<head>` is preferred, this way was used to prevent recording when doing local development.
 2. CSS selectors are used to correlate FullStory events to buttons in the calculator. Since a selector could match multiple buttons (i.e. CSS styling for `7` also matches `8`), the text is used to further identify the button.
 3. The CSS selector is also processed to remove certain classes. For example, FullStory records when the button is pressed, which has different styling than when the button is not. To support the debugger, these styles are removed.
-4. The timestamp in the GitHub issue is used to locate a FullStory bundle using the REST API.
+4. The timestamp in the GitHub issue is used to locate a FullStory bundle using the REST API. The events are loaded and return for the session ID that matches.
 
 ## Run it yourself
 
