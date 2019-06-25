@@ -31,8 +31,8 @@ Since FullStory tracks application events, we can use these events to reproduce 
 ![](/screenshots/debugger.gif)
 
 1. Open the debugger using the menu button and Debugger item.
-2. Enter the GitHub issue number from the [issues](https://github.com/van-fs/calc-app/issues) page. (You can also manually load the events using the textarea.)
-3. Click the filter icon to load the events. (Optionally filter based on session ID or start timestamp.)
+2. Enter a GitHub issue number from the [issues](https://github.com/van-fs/calc-app/issues) page. For example, enter `29`. (Alternatively, you can also manually load the events using the textarea if you wanted to export them manually from the User page.)
+3. Click the filter icon to load the events. (Optionally filter based on session ID or start timestamp if you've manually loaded the events.)
 4. Click the play button to recreate the entire state, use the step button to execute each event in sequence, or click the individual event to fire the associated button.
 
 ## Fun facts
