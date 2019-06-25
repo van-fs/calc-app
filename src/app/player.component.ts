@@ -71,7 +71,10 @@ export class PlayerComponent {
   }
 
   playAll() {
-    for (const event of this.filteredEvents) {
+    const length = this.filteredEvents.length;
+    
+    // just loop n times as step will unshift the array
+    for (let i = 0; i < length; i++) {
       this.step();
     }
   }
