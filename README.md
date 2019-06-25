@@ -16,7 +16,7 @@ Press a few numeric buttons like `7` or `77` followed by an operand such as `+` 
 
 ## Break it
 
-Now something as futuristic as the "calculator" isn't without bugs. We want you to find them. Which button combinations are invalid? Which combinations should work but don't? You decide, and we'll fix it.
+Now something as futuristic as the "calculator" isn't without bugs. We want you to find them. Which button combinations are invalid? Which combinations should work but don't? You decide, and we'll fix it. (Hint, you can hit an operand first which will break it.)
 
 ![](/screenshots/bug.png)
 
